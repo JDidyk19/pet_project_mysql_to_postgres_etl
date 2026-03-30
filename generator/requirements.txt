@@ -1,0 +1,14 @@
+annotated-types==0.7.0
+dnspython==2.8.0
+email-validator==2.3.0
+Faker==40.11.1
+idna==3.11
+isort==8.0.1
+numpy==2.4.4
+pandas==3.0.1
+pydantic==2.12.5
+pydantic_core==2.41.5
+python-dateutil==2.9.0.post0
+six==1.17.0
+typing-inspection==0.4.2
+typing_extensions==4.15.0
