@@ -1,0 +1,4 @@
+LOAD DATA INFILE '/data/fake_data.csv'
+INTO TABLE users
+FIELDS TERMINATED BY ','
+IGNORE 1 ROWS;
