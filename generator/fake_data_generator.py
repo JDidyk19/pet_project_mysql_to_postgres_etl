@@ -22,7 +22,7 @@ class FakeDataGenerator:
     def __init__(self):
         self.faker = Faker()
     
-    def generate_fake_data(self, size: int = 100) -> list[Person]:
+    def generate_fake_data(self, size: int = 1000) -> list[Person]:
         """Generate fake people records
 
         Args:
@@ -32,7 +32,7 @@ class FakeDataGenerator:
             list[Person]
         """
         
-        logger.info("Starting generation of %s records", size)
+        logger.info(f"Starting generation of {size} records")
         people: list[Person] = []
         for _ in range(size):
             birth_date = self.faker.date_of_birth(minimum_age=18, maximum_age=65)
@@ -71,7 +71,7 @@ class FakeDataGenerator:
                 )
             )
             
-        logger.info("Successfully generated %s records", len(people))
+        logger.info(f"Successfully generated {len(people)} records")
         return people
     
     def to_csv(self, people: list[Person], output_path: str = FAKE_DATA_FILE_PATH) -> None:
@@ -81,7 +81,7 @@ class FakeDataGenerator:
             people: List of Person records.
             output_path: Destination CSV path.
         """
-        logger.info("Saving records to CSV: %s", output_path)
+        logger.info(f"Saving records to CSV: {output_path}")
         
         if not FAKE_DATA_DIR_PATH.exists():
             os.mkdir(FAKE_DATA_DIR_PATH)
@@ -93,10 +93,14 @@ class FakeDataGenerator:
         df = pd.DataFrame([person.model_dump() for person in people])
         df.to_csv(output_path, index=False)
         
-        logger.info("CSV successfully saved with %s rows", len(df))
+        logger.info(f"CSV successfully saved with {len(df)} rows")
 
 
 if __name__ == '__main__':
+    DATA_SIZE = int(os.getenv('DATA_SIZE', '1000'))
+    FAKE_DATA_FILE_NAME = os.getenv('FAKE_DATA_FILE_NAME', 'fake_data') + '.csv'
+    file_path = FAKE_DATA_DIR_PATH / FAKE_DATA_FILE_NAME
+    
     generator = FakeDataGenerator()
-    people = generator.generate_fake_data(size=10000)
-    generator.to_csv(people)
+    people = generator.generate_fake_data(size=DATA_SIZE)
+    generator.to_csv(people, file_path)
