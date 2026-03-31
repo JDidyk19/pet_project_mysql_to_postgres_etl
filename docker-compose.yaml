@@ -332,6 +332,32 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+  
+  generator:
+    build:
+      context: ./generator
+      dockerfile: Dockerfile
+    image: fake-generator:v1.0
+    environment:
+      DATA_SIZE: 10000
+      FAKE_DATA_FILE_NAME: users
+    volumes:
+      - ./data:/usr/app/data
+  
+  mysql:
+    image: mysql:8
+    command: --secure-file-priv=""
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: source_db
+    volumes:
+      - ./data:/docker-entrypoint-initdb.d/data
+      - ./scripts/sql/mysql_init.sql:/docker-entrypoint-initdb.d/init.sql
+    depends_on:
+      generator:
+        condition: service_completed_successfully
+    ports:
+      - "3306:3306"
 
 volumes:
   postgres-db-volume:
